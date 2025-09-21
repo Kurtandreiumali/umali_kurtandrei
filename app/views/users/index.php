@@ -159,7 +159,7 @@ a[href*="delete"]:hover {
   </style>
 </head>
 <body>
-  <h1>Students Info</h1>
+  <h1>Users Info</h1>
 
   <!-- Search -->
   <form action="<?= site_url('users'); ?>" method="get" class="search-form">
