@@ -43,7 +43,8 @@
       text-align: left;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select {
       width: 100%;
       padding: 12px 14px;
       border: 1px solid #c8e6c9;
@@ -55,7 +56,8 @@
       box-sizing: border-box;
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       border-color: #43a047;
       box-shadow: 0 0 6px rgba(67, 160, 71, 0.4);
       outline: none;
@@ -104,30 +106,43 @@
   <div class="glass-container">
   <h1>Create User</h1>
 
-<!-- ✅ Error Message -->
-<?php if (!empty($error)): ?>
-    <div class="alert alert-danger" style="margin-bottom: 15px; font-size: 0.9em;">
-        <?= $error ?>
-    </div>
-<?php endif; ?>
-<!-- ✅ End messages -->
+  <!-- ✅ Error Message -->
+  <?php if (!empty($error)): ?>
+      <div class="alert alert-danger" style="margin-bottom: 15px; font-size: 0.9em;">
+          <?= $error ?>
+      </div>
+  <?php endif; ?>
+  <!-- ✅ End messages -->
 
-<form id="user-form" action="<?= site_url('users/create/') ?>" method="POST">
-    <div class="form-group">
-      <input type="text" name="username" placeholder="Username" required 
-             value="<?= isset($username) ? html_escape($username) : '' ?>">
-    </div>
-    <div class="form-group">
-      <input type="email" name="email" placeholder="Email" required 
-             value="<?= isset($email) ? html_escape($email) : '' ?>">
-    </div>
-    <button type="submit" class="btn-submit">Create User</button>
-</form>
-<div class="link-wrapper">
-  <a href="<?= site_url('/users'); ?>" class="btn-link">Cancel</a>
-</div>
+  <form id="user-form" action="<?= site_url('users/create/') ?>" method="POST">
+      <div class="form-group">
+        <input type="text" name="username" placeholder="Username" required 
+               value="<?= isset($username) ? html_escape($username) : '' ?>">
+      </div>
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Email" required 
+               value="<?= isset($email) ? html_escape($email) : '' ?>">
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="form-group">
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+      </div>
+      <div class="form-group">
+        <select name="role" required>
+          <option value="">-- Select Role --</option>
+          <option value="admin" <?= isset($role) && $role=="admin" ? 'selected' : '' ?>>Admin</option>
+          <option value="user" <?= isset($role) && $role=="user" ? 'selected' : '' ?>>User</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">Create User</button>
+  </form>
 
-</div>
+  <div class="link-wrapper">
+    <a href="<?= site_url('/users'); ?>" class="btn-link">Cancel</a>
+  </div>
 
+  </div>
 </body>
 </html>

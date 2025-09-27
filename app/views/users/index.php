@@ -266,31 +266,32 @@
       font-weight: bold;
     }
     .pagination a,
-.pagination strong {
-  margin: 0 3px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #2e7d32 !important;
-  font-size: 14px;
-  text-decoration: none;
-  color: #ffffffff !important;   /* make text green */
-  background: #2e7d32 !important; /* white background */
-}
+    .pagination strong {
+      margin: 0 3px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #2e7d32 !important;
+      font-size: 14px;
+      text-decoration: none;
+      color: #ffffffff !important;   
+      background: #2e7d32 !important;
+    }
 
-.pagination a:hover {
-  background: #ffffffff !important;
-  color: #198754 !important;
-}
+    .pagination a:hover {
+      background: #ffffffff !important;
+      color: #198754 !important;
+    }
 
-.pagination strong {
-  background: #ffffffff !important; /* active page green */
-  color: #2e7d32 !important;
-}
-.page-link.active {
-    background-color: #ffffff !important; /* white background */
-    color: #2e7d32 !important;            /* green text */
-    border: 1px solid #2e7d32 !important; /* green border */
-}
+    .pagination strong {
+      background: #ffffffff !important;
+      color: #2e7d32 !important;
+    }
+
+    .page-link.active {
+      background-color: #ffffff !important;
+      color: #2e7d32 !important;
+      border: 1px solid #2e7d32 !important;
+    }
 
     @media (max-width: 768px) {
       .top-bar {
@@ -361,8 +362,12 @@
                 <td><?= html_escape($user['role']); ?></td>
               <?php endif; ?>
             <td>
-              <a href="<?=site_url('/users/update/'.$user['id']);?>">Update</a>
-              <a href="<?=site_url('/users/delete/'.$user['id']);?>">Delete</a>
+              <?php if ($logged_in_user['role'] === 'admin'): ?>
+                <a href="<?=site_url('/users/update/'.$user['id']);?>">Update</a>
+                <a href="<?=site_url('/users/delete/'.$user['id']);?>" onclick="return confirm('Are you sure?')">Delete</a>
+              <?php else: ?>
+                <span class="text-muted">View Only</span>
+              <?php endif; ?>
             </td>
           </tr>
           <?php endforeach; ?>
@@ -373,9 +378,11 @@
         <?php echo $page; ?>
       </div>
 
-      <div class="button-container">
-        <a href="<?=site_url('users/create'); ?>" class="btn-create">+ Create New User</a>
-      </div>
+      <?php if ($logged_in_user['role'] === 'admin'): ?>
+        <div class="button-container">
+          <a href="<?=site_url('users/create'); ?>" class="btn-create">+ Create New User</a>
+        </div>
+      <?php endif; ?>
     </div>
   </section>
 </body>

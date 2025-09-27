@@ -65,8 +65,21 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 public function create()
 {
     if ($this->io->method() === 'post') {
-        $username = $this->io->post('username');
-        $email    = $this->io->post('email');  
+        $username         = trim($this->io->post('username'));
+        $email            = trim($this->io->post('email'));
+        $password         = $this->io->post('password');
+        $confirm_password = $this->io->post('confirm_password');
+        $role             = $this->io->post('role') ?? 'user'; // default role
+
+        // ✅ Check confirm password
+        if ($password !== $confirm_password) {
+            $this->call->view('users/create', [
+                'error'    => 'Passwords do not match!',
+                'username' => $username,
+                'email'    => $email
+            ]);
+            return;
+        }
 
         // ✅ Check if username already exists
         $existing_user = $this->Usersmodel->get_user_by_username($username);
@@ -81,13 +94,15 @@ public function create()
 
         // ✅ Insert new user
         $data = [
-            'username' => $username,
-            'email'    => $email
+            'username'   => $username,
+            'email'      => $email,
+            'password'   => password_hash($password, PASSWORD_BCRYPT),
+            'role'       => $role,
+            'created_at' => date('Y-m-d H:i:s')
         ];
 
         if ($this->Usersmodel->insert($data)) {
-            // ✅ Redirect to users home automatically
-            redirect('/users');
+            redirect('/users'); // go back to users list
         } else {
             $this->call->view('users/create', [
                 'error'    => 'Failed to create user. Please try again.',
@@ -99,6 +114,7 @@ public function create()
         $this->call->view('users/create');
     }
 }
+
 
 
 
@@ -174,36 +190,62 @@ public function register()
     $this->call->model('Usersmodel'); // load model
 
     if ($this->io->method() == 'post') {
-        $username = $this->io->post('username');
-        $email    = $this->io->post('email');
-        $password = password_hash($this->io->post('password'), PASSWORD_BCRYPT);
-        $role     = $this->io->post('role');
+        $username          = trim($this->io->post('username'));
+        $email             = trim($this->io->post('email'));
+        $password          = $this->io->post('password');
+        $confirm_password  = $this->io->post('confirm_password');
+        $role              = $this->io->post('role') ?? 'user'; // default user if none
+
+        // ✅ Check if passwords match
+        if ($password !== $confirm_password) {
+            $error = "Passwords do not match!";
+            $this->call->view('/auth/register', [
+                'error'    => $error,
+                'username' => $username,
+                'email'    => $email
+            ]);
+            return;
+        }
 
         // ✅ Check if username already exists
         if ($this->Usersmodel->get_user_by_username($username)) {
             $error = "Username already taken!";
-            $this->call->view('/auth/register', ['error' => $error]);
+            $this->call->view('/auth/register', [
+                'error'    => $error,
+                'username' => $username,
+                'email'    => $email
+            ]);
             return;
         }
 
+        // ✅ Hash password
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+        // ✅ Insert data
         $data = [
             'username'   => $username,
             'email'      => $email,
-            'password'   => $password,
+            'password'   => $hashed_password,
             'role'       => $role,
             'created_at' => date('Y-m-d H:i:s')
         ];
 
         if ($this->Usersmodel->insert($data)) {
+            // success → go to login
             redirect('/auth/login');
         } else {
             $error = "Failed to register user.";
-            $this->call->view('/auth/register', ['error' => $error]);
+            $this->call->view('/auth/register', [
+                'error'    => $error,
+                'username' => $username,
+                'email'    => $email
+            ]);
         }
     } else {
         $this->call->view('/auth/register');
     }
 }
+
 
 
 

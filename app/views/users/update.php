@@ -121,19 +121,21 @@
         <input type="email" name="email" value="<?=html_escape($user['email']);?>" placeholder="Email" required>
       </div>
 
-      <?php if(!empty($logged_in_user) && $logged_in_user['role'] === 'admin'): ?>
-        <div class="form-group">
-          <select name="role" required>
-            <option value="user" <?= $user['role'] === 'user' ? 'selected' : ''; ?>>User</option>
-            <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : ''; ?>>Admin</option>
-          </select>
-        </div>
+              <?php if(!empty($logged_in_user) && $logged_in_user['role'] === 'admin'): ?>
+          <div class="form-group">
+            <select name="role" required>
+              <option value="user" <?= $user['role'] === 'user' ? 'selected' : ''; ?>>User</option>
+              <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : ''; ?>>Admin</option>
+            </select>
+          </div>
 
-        <div class="form-group">
-          <input type="password" placeholder="Password" name="password" id="password" required>
-          <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
-        </div>
-      <?php endif; ?>
+          <div class="form-group">
+            <input type="password" placeholder="New Password (leave blank if unchanged)" 
+                  name="password" id="password">
+            <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+          </div>
+        <?php endif; ?>
+
 
       <button type="submit" class="btn-submit">Update User</button>
     </form>
