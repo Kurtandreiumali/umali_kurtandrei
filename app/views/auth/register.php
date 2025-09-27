@@ -113,6 +113,11 @@
 <body>
   <div class="register-container">
     <h2>Register</h2>
+     <?php if (!empty($error)): ?>
+      <div style="color: red; margin-bottom: 15px; font-size: 0.9em; font-weight: 500;">
+          <?= $error ?>
+      </div>
+  <?php endif; ?>
     <form method="POST" action="<?= site_url('auth/register'); ?>">
       
       <div class="form-group">
@@ -149,6 +154,7 @@
       Already have an account? <a href="<?= site_url('auth/login'); ?>">Login here</a>
     </div>
   </div>
+  
 
   <script>
     function toggleVisibility(toggleId, inputId) {

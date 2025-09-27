@@ -62,27 +62,44 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 }
 
 
-    public function create()
-    {
-        if($this->io->method() === 'post'){
-            $username = $this->io->post('username');
-            $email = $this->io->post('email');  
+public function create()
+{
+    if ($this->io->method() === 'post') {
+        $username = $this->io->post('username');
+        $email    = $this->io->post('email');  
 
-            $data = [
+        // ✅ Check if username already exists
+        $existing_user = $this->Usersmodel->get_user_by_username($username);
+        if (!empty($existing_user)) {
+            $this->call->view('users/create', [
+                'error'    => 'Username already exists. Please choose another.',
                 'username' => $username,
-                'email' => $email
-            ];
-
-            if($this->Usersmodel->insert($data)){
-                redirect('/users');
-            } else {
-                echo 'Failed to create user.';
-            }
-        }else{
-           $this->call->view('users/create');
+                'email'    => $email
+            ]);
+            return;
         }
-        
+
+        // ✅ Insert new user
+        $data = [
+            'username' => $username,
+            'email'    => $email
+        ];
+
+        if ($this->Usersmodel->insert($data)) {
+            $this->call->view('users/create', [
+                'success' => 'User created successfully!',
+            ]);
+        } else {
+            $this->call->view('users/create', [
+                'error'    => 'Failed to create user. Please try again.',
+                'username' => $username,
+                'email'    => $email
+            ]);
+        }
+    } else {
+        $this->call->view('users/create');
     }
+}
 
 public function update($id)
 {

@@ -102,8 +102,23 @@
 </head>
 <body>
   <div class="glass-container">
-    <h1>Create User</h1>
-    <form id="user-form" action="<?=site_url('users/create/')?>" method="POST">
+  <h1>Create User</h1>
+
+  <!-- ✅ Error / Success Message -->
+  <?php if (!empty($error)): ?>
+      <div class="alert alert-danger" style="margin-bottom: 15px; font-size: 0.9em;">
+          <?= $error ?>
+      </div>
+  <?php endif; ?>
+
+  <?php if (!empty($success)): ?>
+      <div class="alert alert-success" style="margin-bottom: 15px; font-size: 0.9em;">
+          <?= $success ?>
+      </div>
+  <?php endif; ?>
+  <!-- ✅ End messages -->
+
+  <form id="user-form" action="<?= site_url('users/create/') ?>" method="POST">
       <div class="form-group">
         <input type="text" name="username" placeholder="Username" required 
                value="<?= isset($username) ? html_escape($username) : '' ?>">
@@ -113,10 +128,11 @@
                value="<?= isset($email) ? html_escape($email) : '' ?>">
       </div>
       <button type="submit" class="btn-submit">Create User</button>
-    </form>
-    <div class="link-wrapper">
-      <a href="<?=site_url('/users'); ?>" class="btn-link">← Return to Home</a>
-    </div>
+  </form>
+  <div class="link-wrapper">
+    <a href="<?= site_url('/users'); ?>" class="btn-link">← Return to Home</a>
   </div>
+</div>
+
 </body>
 </html>
