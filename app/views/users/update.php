@@ -137,7 +137,7 @@
 
       <button type="submit" class="btn-submit">Update User</button>
     </form>
-    <a href="<?=site_url('/users');?>" class="btn-return">← Return to Home</a>
+    <a href="<?=site_url('/users');?>" class="btn-return">Cancel</a>
   </div>
 
   <script>

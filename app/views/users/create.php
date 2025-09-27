@@ -104,34 +104,29 @@
   <div class="glass-container">
   <h1>Create User</h1>
 
-  <!-- ✅ Error / Success Message -->
-  <?php if (!empty($error)): ?>
-      <div class="alert alert-danger" style="margin-bottom: 15px; font-size: 0.9em;">
-          <?= $error ?>
-      </div>
-  <?php endif; ?>
+<!-- ✅ Error Message -->
+<?php if (!empty($error)): ?>
+    <div class="alert alert-danger" style="margin-bottom: 15px; font-size: 0.9em;">
+        <?= $error ?>
+    </div>
+<?php endif; ?>
+<!-- ✅ End messages -->
 
-  <?php if (!empty($success)): ?>
-      <div class="alert alert-success" style="margin-bottom: 15px; font-size: 0.9em;">
-          <?= $success ?>
-      </div>
-  <?php endif; ?>
-  <!-- ✅ End messages -->
+<form id="user-form" action="<?= site_url('users/create/') ?>" method="POST">
+    <div class="form-group">
+      <input type="text" name="username" placeholder="Username" required 
+             value="<?= isset($username) ? html_escape($username) : '' ?>">
+    </div>
+    <div class="form-group">
+      <input type="email" name="email" placeholder="Email" required 
+             value="<?= isset($email) ? html_escape($email) : '' ?>">
+    </div>
+    <button type="submit" class="btn-submit">Create User</button>
+</form>
+<div class="link-wrapper">
+  <a href="<?= site_url('/users'); ?>" class="btn-link">Cancel</a>
+</div>
 
-  <form id="user-form" action="<?= site_url('users/create/') ?>" method="POST">
-      <div class="form-group">
-        <input type="text" name="username" placeholder="Username" required 
-               value="<?= isset($username) ? html_escape($username) : '' ?>">
-      </div>
-      <div class="form-group">
-        <input type="email" name="email" placeholder="Email" required 
-               value="<?= isset($email) ? html_escape($email) : '' ?>">
-      </div>
-      <button type="submit" class="btn-submit">Create User</button>
-  </form>
-  <div class="link-wrapper">
-    <a href="<?= site_url('/users'); ?>" class="btn-link">← Return to Home</a>
-  </div>
 </div>
 
 </body>

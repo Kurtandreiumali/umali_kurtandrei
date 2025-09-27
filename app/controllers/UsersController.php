@@ -86,9 +86,8 @@ public function create()
         ];
 
         if ($this->Usersmodel->insert($data)) {
-            $this->call->view('users/create', [
-                'success' => 'User created successfully!',
-            ]);
+            // ✅ Redirect to users home automatically
+            redirect('/users');
         } else {
             $this->call->view('users/create', [
                 'error'    => 'Failed to create user. Please try again.',
@@ -100,6 +99,8 @@ public function create()
         $this->call->view('users/create');
     }
 }
+
+
 
 public function update($id)
 {
@@ -168,29 +169,42 @@ public function update($id)
         }
     }
 
-    public function register()
-    {
-        $this->call->model('Usersmodel'); // load model
+public function register()
+{
+    $this->call->model('Usersmodel'); // load model
 
-        if ($this->io->method() == 'post') {
-            $username = $this->io->post('username');
-            $password = password_hash($this->io->post('password'), PASSWORD_BCRYPT);
+    if ($this->io->method() == 'post') {
+        $username = $this->io->post('username');
+        $email    = $this->io->post('email');
+        $password = password_hash($this->io->post('password'), PASSWORD_BCRYPT);
+        $role     = $this->io->post('role');
 
-            $data = [
-                'username' => $username,
-                'email'    => $this->io->post('email'),
-                'password' => $password,
-                'role'     => $this->io->post('role'),
-                'created_at' => date('Y-m-d H:i:s')
-            ];
-
-            if ($this->Usersmodel->insert($data)) {
-                redirect('/auth/login');
-            }
+        // ✅ Check if username already exists
+        if ($this->Usersmodel->get_user_by_username($username)) {
+            $error = "Username already taken!";
+            $this->call->view('/auth/register', ['error' => $error]);
+            return;
         }
 
+        $data = [
+            'username'   => $username,
+            'email'      => $email,
+            'password'   => $password,
+            'role'       => $role,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        if ($this->Usersmodel->insert($data)) {
+            redirect('/auth/login');
+        } else {
+            $error = "Failed to register user.";
+            $this->call->view('/auth/register', ['error' => $error]);
+        }
+    } else {
         $this->call->view('/auth/register');
     }
+}
+
 
 
         public function login()
